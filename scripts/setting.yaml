@@ -3,3 +3,4 @@ model:
   save_path: '/media/data/data/llm_model'
   # 可选模型 'FreedomIntelligence/HuatuoGPT2-7B' ‘FreedomIntelligence/HuatuoGPT2-34B-8bits’
   model_path: 'FreedomIntelligence/HuatuoGPT2-7B'
+  embedding_path: 'google-bert/bert-base-uncased'

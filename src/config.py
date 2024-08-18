@@ -8,6 +8,8 @@ class ModelConfig:
         self.args = self.args_read()
         self.save_path = self.config_read()['model']['save_path']
         self.model_path = self.config_read()['model']['model_path']
+        self.embedding_path = self.config_read()['model']['embedding_path']
+        self.full_embedding_path = f'{self.save_path}/{self.embedding_path}'
     # 创建 ArgumentParser 对象
 
     def args_read(self):

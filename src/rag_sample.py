@@ -1,11 +1,14 @@
-from openai import OpenAI
 import yaml
+from langchain.document_loaders import JSONLoader
+from langchain.vectorstores import FAISS
+from openai import OpenAI
+from src.local_embedding import LocalEmbeddings
 
 
 def promot_read():
     with open('scripts/prompt_settings.yaml', 'r', encoding='utf-8') as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
-    return data
+    return data['medical_zh']['default']
 
 
 def get_response(prompt, question):
@@ -25,5 +28,16 @@ def get_response(prompt, question):
     return response.choices[0].message.content
 
 
+def rag_miedical():
+    # 步骤1: 加载 JSON 数据
+    json_file_path = 'data/train.json'
+    loader = JSONLoader(file_path=json_file_path,
+                        jq_schema='.', text_content=False)  # 确保 jq_schema 参数被传递
+    documents = loader.load()
+
+    # 步骤3: 生成嵌入
+    embeddings = LocalEmbeddings()
+
+
 if __name__ == '__main__':
-    print(promot_read())
+    rag_miedical()
