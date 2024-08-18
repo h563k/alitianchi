@@ -1,0 +1,4 @@
+# 模型配置
+model:
+  save_path: '/media/data/data/llm_model'
+  model_path: 'FreedomIntelligence/HuatuoGPT2-7B'
