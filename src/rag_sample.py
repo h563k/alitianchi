@@ -1,8 +1,11 @@
 import yaml
-from langchain.document_loaders import JSONLoader
-from langchain.vectorstores import FAISS
-from openai import OpenAI
-from src.local_embedding import LocalEmbeddings
+import json
+from langchain_community.vectorstores import FAISS
+from langchain.chains.question_answering import load_qa_chain
+from langchain_openai import ChatOpenAI
+from langchain.embeddings import HuggingFaceEmbeddings
+from src.config import ModelConfig
+from tools.functionals import CustomRetrievalQA
 
 
 def promot_read():
@@ -11,33 +14,47 @@ def promot_read():
     return data['medical_zh']['default']
 
 
-def get_response(prompt, question):
-    client = OpenAI(base_url="http://127.0.0.1:8000/v1",
-                    api_key="0")
-    response = client.chat.completions.create(
-        model="baichuan-chat-7b",
-        messages=[
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": question},
-        ],
-        temperature=0.1,
-        max_tokens=2048,
-        top_p=1,
-        frequency_penalty=0,
-    )
-    return response.choices[0].message.content
-
-
-def rag_miedical():
+def json_loader():
+    data = []
     # 步骤1: 加载 JSON 数据
     json_file_path = 'data/train.json'
-    loader = JSONLoader(file_path=json_file_path,
-                        jq_schema='.', text_content=False)  # 确保 jq_schema 参数被传递
-    documents = loader.load()
+    with open(json_file_path, 'r', encoding='utf-8') as file:
+        json_data = json.load(file)
+        for item in json_data:
+            item = f"""案例编号:{item['案例编号']}
+'临床资料': {item['临床资料']}
+'病机答案': {item['病机答案']}
+'病机选项': {item['病机选项']}
+'证候答案': {item['证候答案']}
+'证候选项': {item['证候选项']}
+'临证体会': {item['临证体会']}
+            """
+            data.append(item)
+    return data
 
+
+def local_openai():
+    client = ChatOpenAI(base_url="http://127.0.0.1:8000/v1",
+                        openai_api_key='0',
+                        temperature=0.1,
+                        max_tokens=2048,
+                        )
+    return client
+
+
+def rag_miedical(query, custom_prompt):
+    config = ModelConfig()
+    model_name = config.embedding_path
     # 步骤3: 生成嵌入
-    embeddings = LocalEmbeddings()
-
-
-if __name__ == '__main__':
-    rag_miedical()
+    embeddings = HuggingFaceEmbeddings(model_name=model_name)
+    documents = json_loader()
+    llm = local_openai()
+    vectorstore = FAISS.from_texts(documents, embeddings)
+    qa_chain = load_qa_chain(llm, chain_type="stuff")
+    # 步骤3: 实例化自定义的 RetrievalQA
+    retriever = vectorstore.as_retriever()
+    qa = CustomRetrievalQA(retriever=retriever, qa_chain=qa_chain)
+    # 调用自定义的 RetrievalQA 并获取答案和源文档
+    answer, source_docs = qa.run(
+        query, custom_prompt=custom_prompt, return_source_documents=True)
+    return answer, source_docs
