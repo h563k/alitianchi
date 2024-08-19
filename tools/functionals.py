@@ -21,13 +21,13 @@ class CustomRetrievalQA:
 
         if return_source_documents:
             # 返回答案和源文档
-            answer, source_docs = self.qa_chain.run(
+            answer = self.qa_chain.run(
                 input_documents=docs_and_scores, question=query)
 
             # 定制输出格式
             print("Answer:", answer)
             print("\nSource Documents:")
-            for doc in source_docs:
+            for doc in docs_and_scores:
                 print(f"Document: {doc.page_content}")
                 print(f"Metadata: {doc.metadata}\n")
 
