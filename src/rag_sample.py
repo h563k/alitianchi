@@ -1,9 +1,9 @@
 import yaml
 import json
-from langchain_community.vectorstores import FAISS
-from langchain.chains.question_answering import load_qa_chain
 from langchain_openai import ChatOpenAI
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.chains.question_answering import load_qa_chain
 from src.config import ModelConfig
 from tools.functionals import CustomRetrievalQA
 
@@ -42,9 +42,10 @@ def local_openai():
     return client
 
 
-def rag_miedical(query, custom_prompt):
+def rag_miedical(query):
     config = ModelConfig()
     model_name = config.embedding_path
+    custom_prompt = config.promot
     # 步骤3: 生成嵌入
     embeddings = HuggingFaceEmbeddings(model_name=model_name)
     documents = json_loader()
@@ -57,4 +58,5 @@ def rag_miedical(query, custom_prompt):
     # 调用自定义的 RetrievalQA 并获取答案和源文档
     answer, source_docs = qa.run(
         query, custom_prompt=custom_prompt, return_source_documents=True)
-    return answer, source_docs
+    # print(source_docs)
+    return answer
