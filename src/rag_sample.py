@@ -4,6 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.chains.question_answering import load_qa_chain
+from langchain.schema import SystemMessage
 from src.config import ModelConfig
 from src.functionals import CustomRetrievalQA
 from src.data_process import data_procrss
@@ -37,6 +38,7 @@ def local_openai():
                         openai_api_key='0',
                         temperature=0.1,
                         max_tokens=4096,
+                        stream_usage=True
                         )
     return client
 
