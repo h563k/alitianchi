@@ -11,10 +11,11 @@ class CustomRetrievalQA:
         self.retriever = retriever
         self.qa_chain = qa_chain
 
-    def run(self, query, custom_prompt=None, return_source_documents=False):
-        # 如果有自定义提示，将其与原始查询合并
-        if custom_prompt:
-            query = custom_prompt(query)
+    def run(self, query, type, custom_prompt, return_source_documents):
+        # promot与原始查询合并
+        print(query)
+        query = custom_prompt(query, type)
+        print(query)
 
         # 获取检索到的文档
         docs_and_scores = self.retriever.get_relevant_documents(query)

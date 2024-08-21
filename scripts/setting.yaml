@@ -5,4 +5,4 @@ model:
   model_path: 'FreedomIntelligence/HuatuoGPT2-7B'
   # embedding_path: 'google-bert/bert-base-uncased'
   embedding_path: 'sentence-transformers/all-mpnet-base-v2'
-  json_file_path: 'data/train_process.json'
+  json_file_path: 'data/train.json'

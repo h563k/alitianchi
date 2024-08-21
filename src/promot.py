@@ -1,42 +1,95 @@
 from langchain.prompts import PromptTemplate
 
 # 定义你的自定义prompt模板
-template = """
-请首先阅读相关中医的资料：
+
+template_1 = """
+你是一个中医专家，请阅读临床资料
+### 临床资料
+{clinical_information}
+
+请根据参考内容，抽取临床信息，并按照以下格式补全回答：
+
+信息抽取能力-核心临床信息:
+
+"""
+
+template_2 = """
+你是一个中医专家，请阅读临床资料和病机选项
+### 临床资料
+{clinical_information}
+
+### 病机选项
+{pathogenesis_options}
+
+请根据参考内容，选出可能的病机，并按照以下格式补全回答：
+
+病机答案:
+
+"""
+template_3 = """
+你是一个中医专家，请阅读临床资料和证候选项
+### 临床资料
+{clinical_information}
+
+### 证候选项
+{syndrome_options}
+
+请根据参考内容，选出可能的证候，并按照以下格式补全回答：
+
+证候答案: 
+"""
+template_4 = """
+你是一个中医专家，请阅读临床资料：
 ### 临床资料:
 {clinical_information}
 
-### 病机选项:
-{pathogenesis_options}
+请根据参考内容，对病例进行总结,按照以下格式补全回答：
 
-### 证候选项:
-{syndrome_options}
-
-请尽可能地使用中医知识回答问题，并按照以下格式补全回答：
-
-信息抽取能力-核心临床信息:
-病机答案: 
-证候答案: 
 临证体会: 
 """
 
 
-PROMPT = PromptTemplate(
-    template=template,
-    input_variables=["clinical_information",
-                     "pathogenesis_options", "syndrome_options"]
-)
-
-
-def custom_prompt(data):
+def custom_prompt(data, type):
     # 输出构造好的prompt
     # 构造prompt输入
-    inputs = {
-        "clinical_information": data["临床资料"],
-        "pathogenesis_options": data["病机选项"],
-        "syndrome_options": data["证候选项"],
-    }
-    return PROMPT.format(**inputs)
+    if type == "task_1":
+        inputs = {
+            "clinical_information": data["临床资料"]
+        }
+        PROMPT = PromptTemplate(
+            template=template_1,
+            input_variables=["clinical_information"]
+        )
+        return PROMPT.format(**inputs)
+    elif type == "task_2":
+        inputs = {
+            "clinical_information": data["临床资料"],
+            "pathogenesis_options": data["病机选项"]
+        }
+        PROMPT = PromptTemplate(
+            template=template_2,
+            input_variables=["clinical_information", "pathogenesis_options"]
+        )
+        return PROMPT.format(**inputs)
+    elif type == "task_3":
+        inputs = {
+            "clinical_information": data["临床资料"],
+            "syndrome_options": data["证候选项"]
+        }
+        PROMPT = PromptTemplate(
+            template=template_3,
+            input_variables=["clinical_information", "syndrome_options"]
+        )
+        return PROMPT.format(**inputs)
+    elif type == "task_4":
+        inputs = {
+            "clinical_information": data["临床资料"],
+        }
+        PROMPT = PromptTemplate(
+            template=template_4,
+            input_variables=["clinical_information"]
+        )
+        return PROMPT.format(**inputs)
 
 
 if __name__ == "__main__":
@@ -50,4 +103,4 @@ if __name__ == "__main__":
         "证候选项": "A:风湿内侵;B:气虚血瘀;C:血虚生风;D:肾元不固;E:虚火牙痛;F:肝气横逆;G:阴亏之体;H:感暑邪;I:复感外邪;J:阴寒内盛",
         "临证体会": ""
     }
-    print(custom_prompt(data))
+    print(custom_prompt(data, 'task_1'))
