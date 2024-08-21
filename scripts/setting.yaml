@@ -4,7 +4,5 @@ model:
   # 可选模型 'FreedomIntelligence/HuatuoGPT2-7B' ‘FreedomIntelligence/HuatuoGPT2-34B-8bits’
   model_path: 'FreedomIntelligence/HuatuoGPT2-7B'
   # embedding_path: 'google-bert/bert-base-uncased'
-  embedding_path: 'medicalai/ClinicalBERT'
-
-llm_model:
-  promot: '你是一个中医专家，接下来会输入一个需要补全的评测，请按照格式补全‘病机答案’，‘证候答案’，‘临证体会’三部分，并尽可能的用中医知识回答'
+  embedding_path: 'sentence-transformers/all-mpnet-base-v2'
+  json_file_path: 'data/train_process.json'

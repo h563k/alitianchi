@@ -22,4 +22,4 @@ nohup llamafactory-cli api \
     --model_name_or_path $full_path \
     --template baichuan \
     --infer_dtype float16 \
-    --flash_attn disabled >"logs/$current_time.log" 2>&1 &
+    --flash_attn disabled >"log/$current_time.log" 2>&1 &

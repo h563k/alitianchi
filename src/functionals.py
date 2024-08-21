@@ -14,7 +14,7 @@ class CustomRetrievalQA:
     def run(self, query, custom_prompt=None, return_source_documents=False):
         # 如果有自定义提示，将其与原始查询合并
         if custom_prompt:
-            query = f"{custom_prompt} {query}"
+            query = custom_prompt(query)
 
         # 获取检索到的文档
         docs_and_scores = self.retriever.get_relevant_documents(query)

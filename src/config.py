@@ -9,7 +9,7 @@ class ModelConfig:
         self.save_path = self.config_read()['model']['save_path']
         self.model_path = self.config_read()['model']['model_path']
         self.embedding_path = self.config_read()['model']['embedding_path']
-        self.promot = self.config_read()['llm_model']['promot']
+        self.json_file_path = self.config_read()['model']['json_file_path']
         self.full_embedding_path = f'{self.save_path}/{self.embedding_path}'
     # 创建 ArgumentParser 对象
 
