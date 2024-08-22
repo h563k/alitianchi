@@ -28,7 +28,6 @@ def json_loader(type):
         json_data = json.load(file)
         for item in json_data:
             item = data_procrss(item, type)
-            # print(item)
             data.append(item)
     return data
 
@@ -41,9 +40,8 @@ def local_openai():
                         stream_usage=True
                         )
     return client
-
-
-def rag_miedical(query, return_source_documents, type):
+# 经过测试发现load_qa_chain的功能
+def rag_miedical(query, type):
     model_name = config.embedding_path
     # 步骤3: 生成嵌入
     embeddings = HuggingFaceEmbeddings(model_name=model_name)
@@ -52,8 +50,8 @@ def rag_miedical(query, return_source_documents, type):
     vectorstore = FAISS.from_texts(documents, embeddings)
     qa_chain = load_qa_chain(llm, chain_type="stuff")
     # 步骤3: 实例化自定义的 RetrievalQA
-    retriever = vectorstore.as_retriever()
-    qa = CustomRetrievalQA(retriever=retriever, qa_chain=qa_chain)
+    # retriever = vectorstore.as_retriever()
+    qa = CustomRetrievalQA(retriever=vectorstore, qa_chain=qa_chain)
     # 调用自定义的 RetrievalQA 并获取答案和源文档
-    answer = qa.run(query, type, custom_prompt, return_source_documents)
+    answer = qa.run(query, type, custom_prompt)
     return answer

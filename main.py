@@ -16,6 +16,4 @@ if __name__ == '__main__':
         "证候选项": "A:风湿内侵;B:气虚血瘀;C:血虚生风;D:肾元不固;E:虚火牙痛;F:肝气横逆;G:阴亏之体;H:感暑邪;I:复感外邪;J:阴寒内盛",
         "临证体会": ""
     }
-    from src.promot import custom_prompt
-    # print(custom_prompt(query, 'task_1'))
-    print(rag_miedical(query, False, 'task_1'))
+    print(rag_miedical(query, 'task_1'))

@@ -3,6 +3,7 @@ transformers>=4.3.5
 langchain
 langchain-community
 langchain-cli
+langchain_openai
 faiss-gpu
 sentence-transformers
 jq

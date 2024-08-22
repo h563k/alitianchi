@@ -4,6 +4,7 @@ from src.config import ModelConfig
 
 config = ModelConfig()
 model_full_path = config.model_full_path
+print(model_full_path)
 
 
 def run_controller():
@@ -14,7 +15,7 @@ def run_controller():
 def run_model_llm():
     subprocess.run([
         "python3", "-m", "fastchat.serve.model_worker", "--model-path", f"{model_full_path}",
-        "--num-gpus", "2", "--dtype", "float16"
+        "--dtype", "float16"
     ])
 
 

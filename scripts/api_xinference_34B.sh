@@ -8,6 +8,6 @@ ENV_NAME=huatuo
 
 . "${CONDA_PATH}/etc/profile.d/conda.sh"
 conda activate $ENV_NAME
-
-cd /opt/project/alitianchi
-nohup xinference-local --host 0.0.0.0 --port 9997 >"logs/$current_time.log" 2>&1 &
+rm -rf log/$current_time.log
+cd /home/lml/projects/alitianchi
+nohup xinference-local --host 0.0.0.0 --port 9997 >"log/$current_time.log" 2>&1 &

@@ -11,33 +11,23 @@ class CustomRetrievalQA:
         self.retriever = retriever
         self.qa_chain = qa_chain
 
-    def run(self, query, type, custom_prompt, return_source_documents):
+    def run(self, query, type, custom_prompt):
         # promot与原始查询合并
-        print(query)
         query = custom_prompt(query, type)
         print(query)
 
         # 获取检索到的文档
-        docs_and_scores = self.retriever.get_relevant_documents(query)
+        docs_and_scores = self.retriever.similarity_search(
+            query, search_kwargs={"k": 3})
 
-        if return_source_documents:
-            # 返回答案和源文档
-            answer = self.qa_chain.run(
-                input_documents=docs_and_scores, question=query)
+        # 返回匹配结果 只推送第一个
+        for doc in docs_and_scores:
+            print(f"Document: {doc.page_content}")
+            print(f"Metadata: {doc.metadata}\n")
 
-            # 定制输出格式
-            print("Answer:", answer)
-            print("\nSource Documents:")
-            for doc in docs_and_scores:
-                print(f"Document: {doc.page_content}")
-                print(f"Metadata: {doc.metadata}\n")
-
-            return answer, docs_and_scores
-        else:
-            # 只返回答案
-            answer = self.qa_chain.run(
-                input_documents=docs_and_scores, question=query)
-            return answer
+        answer = self.qa_chain.run(
+            input_documents=docs_and_scores, question=query)
+        return answer
 
 
 class LocalEmbeddings(Embeddings):
