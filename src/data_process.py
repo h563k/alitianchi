@@ -11,9 +11,8 @@ def data_procrss(data, type):
     if type == 'task_1':
         temp = f"""### 临床资料:
 {data['临床资料']}
-
-### 回答格式
-信息抽取能力-核心临床信息: {data['信息抽取能力-核心临床信息']}
+###信息抽取
+核心临床信息: {data['信息抽取能力-核心临床信息']}
 """
     elif type == 'task_2':
         temp = f"""### 临床资料:

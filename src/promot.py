@@ -3,14 +3,10 @@ from langchain.prompts import PromptTemplate
 # 定义你的自定义prompt模板
 
 template_1 = """
-你是一个中医专家，请阅读临床资料
 ### 临床资料
 {clinical_information}
-
-请根据参考内容，抽取临床信息，并按照以下格式补全回答：
-
-信息抽取能力-核心临床信息:
-
+###信息抽取
+核心临床信息:
 """
 
 template_2 = """

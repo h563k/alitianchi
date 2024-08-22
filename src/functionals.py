@@ -12,32 +12,28 @@ class CustomRetrievalQA:
         self.qa_chain = qa_chain
 
     def run(self, query, type, custom_prompt, return_source_documents):
-        # promot与原始查询合并
-        print(query)
-        query = custom_prompt(query, type)
-        print(query)
-
+        # 初步处理
+        search_query = custom_prompt(query, type)
         # 获取检索到的文档
-        docs_and_scores = self.retriever.get_relevant_documents(query)
-
-        if return_source_documents:
-            # 返回答案和源文档
-            answer = self.qa_chain.run(
-                input_documents=docs_and_scores, question=query)
-
+        docs = ""
+        # 获取检索到的文档
+        docs_and_scores = self.retriever.similarity_search_with_score(
+            search_query, k=3)
+        for i, (doc, score) in enumerate(docs_and_scores):
+            page_content = doc.page_content
             # 定制输出格式
-            print("Answer:", answer)
-            print("\nSource Documents:")
-            for doc in docs_and_scores:
-                print(f"Document: {doc.page_content}")
-                print(f"Metadata: {doc.metadata}\n")
+            if return_source_documents:
+                print(f"Document: {page_content}")
+                print(f"Score: {score}\n")
+            docs += f"##参考资料{i+1}:\n" + page_content + "\n"
 
-            return answer, docs_and_scores
-        else:
-            # 只返回答案
-            answer = self.qa_chain.run(
-                input_documents=docs_and_scores, question=query)
-            return answer
+        # promot与原始查询合并
+        query = f"""你是一个中医专家，请阅读如下资料:
+{docs}
+请参考上述格式，补齐以下内容。
+{search_query}
+        """
+        return query
 
 
 class LocalEmbeddings(Embeddings):

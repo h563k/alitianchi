@@ -10,7 +10,7 @@ ENV_NAME="huatuo"
 conda activate "$ENV_NAME"
 ps aux | grep llamafactory | awk '{print $2}' | xargs kill
 cd "$home"
-rm -rf logs/$current_time.log
+rm -rf log/$current_time.log
 
 # 参数src/llamafactory/hparams/model_args.py
 # 使用date命令并格式化输出，精确到日期
