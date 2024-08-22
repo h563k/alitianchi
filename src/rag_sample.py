@@ -8,7 +8,6 @@ from langchain.chains.question_answering import load_qa_chain
 from src.config import ModelConfig
 from src.functionals import CustomRetrievalQA
 from src.data_process import data_procrss
-from src.promot import custom_prompt
 
 
 config = ModelConfig()
@@ -36,13 +35,13 @@ def json_loader(type):
 def local_openai(prompt):
     dashscope.api_key = config.dashscope_key
     response = dashscope.Generation.call(
-        model='qwen2-72b-instruct',
+        model=config.model_name,
         prompt=prompt,
         seed=42,
         top_p=0.8,
         result_format='message',
-        max_tokens=1000,
-        temperature=0.2,
+        max_tokens=config.max_tokens,
+        temperature=config.temperature,
         repetition_penalty=1.0
     )
     if response.status_code == HTTPStatus.OK:
@@ -63,9 +62,12 @@ def rag_miedical(query, return_source_documents, type):
     # 步骤3: 实例化自定义的 RetrievalQA
     qa = CustomRetrievalQA(retriever=vectorstore, qa_chain=local_openai)
     # 调用自定义的 RetrievalQA 并获取答案和源文档
-    query = qa.run(query, type, custom_prompt, return_source_documents)
-    answer = local_openai(query)
-    return answer.output.choices[0].message.content
+    query = qa.run(query, type, return_source_documents)
+    if return_source_documents:
+        return query
+    else:
+        answer = local_openai(query)
+        return answer.output.choices[0].message.content
 
 
 def answer_process():
@@ -76,10 +78,17 @@ def answer_process():
         querys = json.load(file)
         for query in querys:
             answer_task1 = rag_miedical(query, False, 'task_1')
+            answer_task2 = rag_miedical(query, False, 'task_2')
+            answer_task3 = rag_miedical(query, False, 'task_3')
+            answer_task4 = rag_miedical(query, False, 'task_4')
             result.append({
                 'input': query,
-                'task_1': answer_task1
+                'task_1': answer_task1,
+                'task_2': answer_task2,
+                'task_3': answer_task3,
+                'task_4': answer_task4
             })
             print(f"{query['案例编号']}")
+            break
         json.dump(result, save, ensure_ascii=False)
         save.close()

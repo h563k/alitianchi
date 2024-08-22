@@ -9,3 +9,8 @@ model:
   predict_file_path: 'data/A榜.json'
   save_file_path: 'data/task.json'
   dashscope_key: 'sk-2e90bfd96ece41c8a50074105de169c2'
+
+llm:
+  model_name: 'qwen2-72b-instruct'
+  max_tokens: 1000
+  temperature: 0.1

@@ -1,6 +1,7 @@
 from typing import List
 from transformers import BertTokenizer, BertModel
 from langchain_core.embeddings import Embeddings
+from src.promot import custom_prompt
 from src.config import ModelConfig
 import torch
 
@@ -11,7 +12,7 @@ class CustomRetrievalQA:
         self.retriever = retriever
         self.qa_chain = qa_chain
 
-    def run(self, query, type, custom_prompt, return_source_documents):
+    def run(self, query, type, return_source_documents):
         # 初步处理
         search_query = custom_prompt(query, type)
         # 获取检索到的文档
@@ -22,17 +23,18 @@ class CustomRetrievalQA:
         for i, (doc, score) in enumerate(docs_and_scores):
             page_content = doc.page_content
             # 定制输出格式
-            if return_source_documents:
-                print(f"Document: {page_content}")
-                print(f"Score: {score}\n")
-            docs += f"##参考资料{i+1}:\n" + page_content + "\n"
+            docs += f"## 参考资料{i+1}:\n" + page_content + "\n"
 
         # promot与原始查询合并
         query = f"""你是一个中医专家，请阅读如下资料:
 {docs}
-请参考上述格式，补齐以下内容。
+
+
+# 请参考上述格式，补齐以下内容。
 {search_query}
         """
+        if return_source_documents:
+            print(query)
         return query
 
 

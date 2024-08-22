@@ -55,6 +55,18 @@ class ModelConfig:
         return self.config_read()['model']['predict_file_path']
 
     @property
+    def model_name(self):
+        return self.config_read()['llm']['model_name']
+
+    @property
+    def max_tokens(self):
+        return self.config_read()['llm']['max_tokens']
+
+    @property
+    def temperature(self):
+        return self.config_read()['llm']['temperature']
+
+    @property
     def model_full_path(self):
         return f'{self.save_path}/{self.model_path}'
 

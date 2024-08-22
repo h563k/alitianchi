@@ -17,31 +17,23 @@ def data_procrss(data, type):
     elif type == 'task_2':
         temp = f"""### 临床资料:
 {data['临床资料']}
-
 ### 病机选项:
 {data['病机选项']}
-
-### 回答格式
-
+### 病机答案
 病机答案: {answer_process(data, '病机选项', '病机答案')}
 """
     elif type == 'task_3':
         temp = f"""### 临床资料:
 {data['临床资料']}
-
 ### 证候选项:
 {data['证候选项']}
-
-### 回答格式
-
+### 证候答案
 证候答案: {answer_process(data, '证候选项', '证候答案')}
 """
     elif type == 'task_4':
         temp = f"""### 临床资料:
 {data['临床资料']}
-
-### 回答格式
-
-临证体会: {data['临证体会']}
+### 临证体会
+{data['临证体会']}
 """
     return temp
