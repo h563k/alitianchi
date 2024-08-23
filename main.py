@@ -17,6 +17,6 @@ if __name__ == '__main__':
         "临证体会": ""
     }
     # rag_miedical(query, True, 'task_5')
-    # task_list = ['task_1', 'task_2', 'task_3', 'task_4']
+    task_list = ['task_1', 'task_2', 'task_3', 'task_4', 'task_5']
     task_list = ['task_5']
     answer_process(task_list)
