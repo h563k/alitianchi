@@ -83,5 +83,5 @@ def answer_process(task_list: List[str]):
                 temp[task] = rag_medical(query, False, task)
             result.append(temp.copy())
             print(f"{query['案例编号']}")
-            json.dump(result, save, ensure_ascii=False)
+        json.dump(result, save, ensure_ascii=False)
         save.close()
