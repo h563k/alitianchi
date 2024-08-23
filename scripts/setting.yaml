@@ -6,7 +6,7 @@ model:
   # embedding_path: 'google-bert/bert-base-uncased'
   embedding_path: 'sentence-transformers/all-mpnet-base-v2'
   json_file_path: 'data/train.json'
-  predict_file_path: 'data/A榜.json'
+  predict_file_path: 'data/测试榜.json'
   save_file_path: 'data/task.json'
   dashscope_key: 'sk-2e90bfd96ece41c8a50074105de169c2'
 
