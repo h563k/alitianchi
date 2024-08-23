@@ -77,15 +77,11 @@ def answer_process(task_list: List[str]):
     with open(predict_file_path, 'r', encoding='utf-8') as file:
         querys = json.load(file)
         temp = {}
-        count = 0
         for query in querys:
-            count += 1
             temp['input'] = query
             for task in task_list:
                 temp[task] = rag_miedical(query, False, task)
             result.append(temp.copy())
-            print(result)
-            if count == 3:
-                break
+            print(f"{query['案例编号']}")
         json.dump(result, save, ensure_ascii=False)
         save.close()
