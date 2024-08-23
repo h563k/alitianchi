@@ -36,4 +36,10 @@ def data_procrss(data, type):
 ### 临证体会
 {data['临证体会']}
 """
+    elif type == 'task_5':
+        temp = f"""### 临床资料:
+{data['临床资料']}
+### 辨证
+{data['辨证']}
+"""
     return temp

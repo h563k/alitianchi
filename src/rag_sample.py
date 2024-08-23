@@ -1,5 +1,6 @@
 import yaml
 import json
+from typing import List
 from http import HTTPStatus
 import dashscope
 from langchain_community.vectorstores import FAISS
@@ -27,7 +28,6 @@ def json_loader(type):
         json_data = json.load(file)
         for item in json_data:
             item = data_procrss(item, type)
-            # print(item)
             data.append(item)
     return data
 
@@ -60,7 +60,7 @@ def rag_miedical(query, return_source_documents, type):
     documents = json_loader(type)
     vectorstore = FAISS.from_texts(documents, embeddings)
     # 步骤3: 实例化自定义的 RetrievalQA
-    qa = CustomRetrievalQA(retriever=vectorstore, qa_chain=local_openai)
+    qa = CustomRetrievalQA(vectorstore)
     # 调用自定义的 RetrievalQA 并获取答案和源文档
     query = qa.run(query, type, return_source_documents)
     if return_source_documents:
@@ -70,25 +70,18 @@ def rag_miedical(query, return_source_documents, type):
         return answer.output.choices[0].message.content
 
 
-def answer_process():
+def answer_process(task_list: List[str]):
     result = []
     predict_file_path = config.predict_file_path
     save = open(config.save_file_path, 'w', encoding='utf-8')
     with open(predict_file_path, 'r', encoding='utf-8') as file:
         querys = json.load(file)
+        temp = {}
         for query in querys:
-            answer_task1 = rag_miedical(query, False, 'task_1')
-            answer_task2 = rag_miedical(query, False, 'task_2')
-            answer_task3 = rag_miedical(query, False, 'task_3')
-            answer_task4 = rag_miedical(query, False, 'task_4')
-            result.append({
-                'input': query,
-                'task_1': answer_task1,
-                'task_2': answer_task2,
-                'task_3': answer_task3,
-                'task_4': answer_task4
-            })
+            temp['input'] = query
+            for task in task_list:
+                temp[task] = rag_miedical(query, False, task)
+            result.append(temp)
             print(f"{query['案例编号']}")
-            break
         json.dump(result, save, ensure_ascii=False)
         save.close()

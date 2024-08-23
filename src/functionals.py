@@ -8,9 +8,8 @@ import torch
 
 # 自定义一个 RetrievalQA 类，以便能够获取检索到的文档
 class CustomRetrievalQA:
-    def __init__(self, retriever, qa_chain):
+    def __init__(self, retriever):
         self.retriever = retriever
-        self.qa_chain = qa_chain
 
     def run(self, query, type, return_source_documents):
         # 初步处理

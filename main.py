@@ -16,5 +16,7 @@ if __name__ == '__main__':
         "证候选项": "A:风湿内侵;B:气虚血瘀;C:血虚生风;D:肾元不固;E:虚火牙痛;F:肝气横逆;G:阴亏之体;H:感暑邪;I:复感外邪;J:阴寒内盛",
         "临证体会": ""
     }
-    # rag_miedical(query, True, 'task_4')
-    answer_process()
+    # rag_miedical(query, True, 'task_5')
+    # task_list = ['task_1', 'task_2', 'task_3', 'task_4']
+    task_list = ['task_5']
+    answer_process(task_list)

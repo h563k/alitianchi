@@ -31,6 +31,12 @@ template_4 = """
 ### 临证体会
 临证体会: 
 """
+template_5 = """
+### 临床资料:
+{clinical_information}
+### 辨证
+辨证: 
+"""
 
 
 def custom_prompt(data, type):
@@ -71,6 +77,15 @@ def custom_prompt(data, type):
         }
         PROMPT = PromptTemplate(
             template=template_4,
+            input_variables=["clinical_information"]
+        )
+        return PROMPT.format(**inputs)
+    elif type == "task_5":
+        inputs = {
+            "clinical_information": data["临床资料"],
+        }
+        PROMPT = PromptTemplate(
+            template=template_5,
             input_variables=["clinical_information"]
         )
         return PROMPT.format(**inputs)
