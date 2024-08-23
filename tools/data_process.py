@@ -2,37 +2,49 @@ import os
 import json
 
 
-def answer_process(data, choice, answer):
-    disease = {}
-    for key in data[choice].split(';'):
-        key, val = key.split(':')
-        disease[key] = val
-    result = [disease[key] for key in data[answer].split(';')]
-    return ';'.join(result)
+def task_1_step():
+    task1 = open('/opt/project/alitianchi/data/task1.json',
+                 'r', encoding='utf-8')
+    task5 = open('/opt/project/alitianchi/data/task5.json',
+                 'r', encoding='utf-8')
+    task1234 = open('/opt/project/alitianchi/data/task1234.json',
+                    'r', encoding='utf-8')
+    task_1_json = json.load(task1)
+    task5_json = json.load(task5)
+    task1234_json = json.load(task1234)
+
+    result = []
+    for data in task1234_json:
+
+        for temp in task5_json:
+            if data['input'] == temp['input']:
+                data['task_5'] = temp['task_5']
+                break
+            for temp2 in task_1_json:
+                if data['input'] == temp2['input']:
+                    data['task_1'] = temp2['task_1']
+                    result.append(data.copy())
+                    break
+    with open('/opt/project/alitianchi/data/task.json', 'w', encoding='utf-8') as f:
+        json.dump(result, f, ensure_ascii=False)
+    task5.close()
+    task1234.close()
 
 
-procrss = []
-with open('data/train.json', 'r') as f:
-    datas = json.load(f)
-    for data in datas:
+def task_2_step():
+    task = open('/opt/project/alitianchi/data/task.json',
+                'r', encoding='utf-8')
+    save = open('/opt/project/alitianchi/data/提交内容.txt',
+                'w', encoding='utf-8')
+    task_json = json.load(task)
+    for data in task_json:
+        patient_id = data['input']['案例编号']
+        task_1 = data['task_1'].replace('核心临床信息: ', '')
+        print(patient_id)
+        print(task_1, end='\n\n')
+    task.close()
+    save.close()
 
-        temp = f"""### 临床资料:
-{data['临床资料']}
 
-### 病机选项:
-{data['病机选项']}
-
-### 证候选项:
-{data['证候选项']}
-
-### 回答格式
-
-信息抽取能力-核心临床信息: {data['信息抽取能力-核心临床信息']}
-病机答案: {answer_process(data, '病机选项', '病机答案')}
-证候答案: {answer_process(data, '证候选项', '证候答案')}
-临证体会: {data['临证体会']}
-"""
-        procrss.append(temp)
-
-with open('data/train_process.json', 'w') as f:
-    json.dump(procrss, f, ensure_ascii=False)
+if __name__ == '__main__':
+    task_1_step()

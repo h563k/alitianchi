@@ -1,3 +1,7 @@
+import json
+from src.config import ModelConfig
+
+
 def answer_process(data, choice, answer):
     disease = {}
     for key in data[choice].split(';'):
@@ -43,3 +47,12 @@ def data_procrss(data, type):
 {data['辨证']}
 """
     return temp
+
+
+def final_output(data, type):
+    config = ModelConfig()
+    save_file_path = config.save_file_path
+    with open(save_file_path, 'r', encoding='utf-8') as file:
+        task = json.load(file)
+
+    return task

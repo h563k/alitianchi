@@ -29,7 +29,7 @@ class CustomRetrievalQA:
 {docs}
 
 
-# 请参考上述格式，补齐以下内容。
+# 请参考上述格式，补齐以下内容，只允许使用中医和中医相关知识,不要出现西医相关内容。
 {search_query}
         """
         if return_source_documents:

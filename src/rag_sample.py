@@ -53,7 +53,7 @@ def local_openai(prompt):
         ))
 
 
-def rag_miedical(query, return_source_documents, type):
+def rag_medical(query, return_source_documents, type):
     model_name = config.embedding_path
     # 步骤3: 生成嵌入
     embeddings = HuggingFaceEmbeddings(model_name=model_name)
@@ -80,8 +80,8 @@ def answer_process(task_list: List[str]):
         for query in querys:
             temp['input'] = query
             for task in task_list:
-                temp[task] = rag_miedical(query, False, task)
+                temp[task] = rag_medical(query, False, task)
             result.append(temp.copy())
             print(f"{query['案例编号']}")
-        json.dump(result, save, ensure_ascii=False)
+            json.dump(result, save, ensure_ascii=False)
         save.close()
