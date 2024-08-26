@@ -8,7 +8,7 @@ model:
   json_file_path: 'data/train.json'
   predict_file_path: 'data/测试榜.json'
   save_file_path: 'data'
-  dashscope_key: 'sk-2e90bfd96ece41c8a50074105de169c2'
+  dashscope_key: 'sk-4c15e2ac77ca4e4dbd06d6939cb6f34f'
 
 llm:
   model_name: 'qwen2-72b-instruct'
