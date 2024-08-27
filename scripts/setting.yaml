@@ -6,11 +6,11 @@ model:
   # embedding_path: 'google-bert/bert-base-uncased'
   embedding_path: 'sentence-transformers/all-mpnet-base-v2'
   json_file_path: 'data/train.json'
-  predict_file_path: 'data/A榜.json'
-  save_file_path: 'data/task.json'
-  dashscope_key: 'sk-2e90bfd96ece41c8a50074105de169c2'
+  predict_file_path: 'data/测试榜.json'
+  save_file_path: 'data'
+  dashscope_key: 'sk-4c15e2ac77ca4e4dbd06d6939cb6f34f'
 
 llm:
   model_name: 'qwen2-72b-instruct'
   max_tokens: 1000
-  temperature: 0.1
+  temperature: 0
