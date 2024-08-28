@@ -28,9 +28,9 @@ def data_process_predict_task3(data, model_name, stream):
 请根据临床资料最符合的病机选项(单选或多选),给出答案即可,不需要任何额外回答,格式如下：
 病机：
 """
+        print(prompt)
         answer = local_openai(system_prompt=None,
                               prompt=prompt, model_name=model_name, stream=None)
-
     elif re.findall('huatuo', model_name):
         system_prompt = """请根据中医理论，分析临床资料，并从提供的选项中选择最符合的病机，不需要任何额外回答,格式如下：
 病机：
@@ -42,15 +42,17 @@ def data_process_predict_task3(data, model_name, stream):
 """
         answer = local_openai(system_prompt=system_prompt,
                               prompt=prompt, model_name=model_name, stream=stream)
-    Pathogenesis = re.findall('[A-Z]+', answer)
+    else:
+        answer = ''
+    pathogenesis = re.findall('[A-Z]+', answer)
     temp = []
-    for pathogenesi in Pathogenesis:
+    for pathogenesi in pathogenesis:
         if len(pathogenesi) == 1:
             temp.append(pathogenesi)
         elif len(pathogenesi) > 1:
             temp.extend(list(pathogenesi))
-    Pathogenesis = list(set(temp))
-    return [Pathogenesis, answer]
+    pathogenesis = list(set(temp))
+    return [pathogenesis, answer]
 
 
 def data_process_save_task3(datas, answers):
