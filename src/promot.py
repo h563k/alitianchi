@@ -4,38 +4,45 @@ from tools.standard_log import log_to_file
 from src.llm_api import local_openai
 from tools.config import ModelConfig
 from src.functional import rouge_l, find_common_elements
+from openai import OpenAI
 
 
 config = ModelConfig()
 
 
-def data_process_predict_task3(data, model_name):
+@log_to_file
+def data_process_predict_task3(data, model_name, stream):
     if re.findall('qwen', model_name):
-        data = f"""### 临床资料
-    {data['临床资料']}
-    ### 病机选项
-    {data['病机选项']}
-    请根据临床资料，选出合适的病机(单选或多选)，只需要给出答案，不需要任何额外回答,格式如下：
-    病机：
-    """
-        print(data)
-        answer = local_openai(data, model_name)
-        answer = answer.split("\n")
-        temp = []
-        for ans in answer:
-            if ans:
-                temp.append(ans)
-        answer = temp
-        print(temp)
-        Pathogenesis = re.findall('[A-Za-z]+', answer[0])
-        temp = []
-        for pathogenesi in Pathogenesis:
-            if len(pathogenesi) == 1:
-                temp.append(pathogenesi)
-            elif len(pathogenesi) > 1:
-                temp.extend(list(pathogenesi))
-        Pathogenesis = list(set(temp))
-        return [Pathogenesis, answer]
+        prompt = f"""### 临床资料
+{data['临床资料']}
+### 病机选项
+{data['病机选项']}
+请根据中医理论，分析临床资料，并从提供的选项中选择最符合的病机，不需要任何额外回答,格式如下：
+病机：
+"""
+        answer = local_openai(system_prompt=None,
+                              prompt=prompt, model_name=model_name, stream=None)
+
+    elif re.findall('huatuo', model_name):
+        system_prompt = """请根据中医理论，分析临床资料，并从提供的选项中选择最符合的病机，不需要任何额外回答,格式如下：
+病机：
+"""
+        prompt = f"""### 临床资料
+{data['临床资料']}
+### 病机选项
+{data['病机选项']}
+"""
+        answer = local_openai(system_prompt=system_prompt,
+                              prompt=prompt, model_name=model_name, stream=stream)
+    Pathogenesis = re.findall('[A-Za-z]+', answer)
+    temp = []
+    for pathogenesi in Pathogenesis:
+        if len(pathogenesi) == 1:
+            temp.append(pathogenesi)
+        elif len(pathogenesi) > 1:
+            temp.extend(list(pathogenesi))
+    Pathogenesis = list(set(temp))
+    return [Pathogenesis, answer]
 
 
 def data_process_save_task3(datas, answers):
@@ -63,7 +70,7 @@ def data_process_save_task3(datas, answers):
 
 
 @log_to_file
-def data_process(type, model_name, counts):
+def data_process(type, model_name, counts, stream):
     json_file_path = config.json_file_path
     with open(json_file_path, 'r') as f:
         datas = json.load(f)
@@ -75,15 +82,15 @@ def data_process(type, model_name, counts):
         if type == 'taks_3':
             try:
                 result[patient_id] = data_process_predict_task3(
-                    data, model_name)
+                    data, model_name, stream)
             except RecursionError as e:
                 print(e)
                 continue
     return result
 
 
-def data_save_and_scores(type, model_name, counts):
-    answers = data_process(type, model_name, counts)
+def data_save_and_scores(type, model_name, counts, stream=False):
+    answers = data_process(type, model_name, counts, stream)
     if not answers:
         return
     # 读取本地评估用分数计算文件 train.json

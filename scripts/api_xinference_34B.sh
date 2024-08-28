@@ -5,7 +5,7 @@
 current_time=$(date +"%Y-%m-%d")
 CONDA_PATH=/root/miniconda3
 ENV_NAME=xinf
-
+ps aux | grep xinfererce | awk '{print $2}' | xargs kill
 . "${CONDA_PATH}/etc/profile.d/conda.sh"
 conda activate $ENV_NAME
 rm -rf log/$current_time.log
