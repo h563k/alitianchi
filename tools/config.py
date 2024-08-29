@@ -67,6 +67,30 @@ class ModelConfig:
         return self.config_read()['llm']['temperature']
 
     @property
+    def presence_penalty(self):
+        return self.config_read()['llm']['presence_penalty']
+
+    @property
+    def frequency_penalty(self):
+        return self.config_read()['llm']['frequency_penalty']
+
+    @property
+    def seed(self):
+        return self.config_read()['llm']['seed']
+
+    @property
+    def qwen(self):
+        return self.config_read()['llm']['qwen']
+
+    @property
+    def kimi(self):
+        return self.config_read()['llm']['kimi']
+
+    @property
+    def glm(self):
+        return self.config_read()['llm']['glm']
+
+    @property
     def model_full_path(self):
         return f'{self.save_path}/{self.model_path}'
 

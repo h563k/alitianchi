@@ -1,6 +1,6 @@
 import json
 
-from src.promot import config, data_process_save_task3, data_process_predict_task3
+from src.promot import config, data_process_save_task2, data_process_predict_task2
 from tools.standard_log import log_to_file
 
 
@@ -16,14 +16,18 @@ def data_process(type, model_name, counts, stream):
         patient_id = data['案例编号']
         if type == 'task1':
             pass
-        if type == 'task3':
+        if type == 'task2':
             try:
-                result[patient_id] = data_process_predict_task3(
+                result[patient_id] = data_process_predict_task2(
                     data, model_name, stream)
             except RecursionError as e:
                 print(e)
                 continue
+        if type == 'task3':
+            pass
         if type == 'task4':
+            pass
+        if type == 'task5':
             pass
     return result
 
@@ -37,8 +41,8 @@ def data_save_and_scores(type, model_name, counts, stream=False):
     json_file_path = config.json_file_path
     with open(json_file_path, 'r', encoding='utf-8') as f:
         datas = json.load(f)
-    if type == 'task3':
-        save_file = data_process_save_task3(datas, answers)
+    if type == 'task2':
+        save_file = data_process_save_task2(datas, answers)
     # 大模型回答保存到本地
     save_file_path = f"{config.save_file_path}/{type}_{model_name}.json"
     with open(save_file_path, 'w') as f:

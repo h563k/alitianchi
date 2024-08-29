@@ -14,3 +14,16 @@ llm:
   model_name: 'qwen2-72b-instruct'
   max_tokens: 1000
   temperature: 0
+  presence_penalty: 1
+  frequency_penalty: 1
+  seed: 42
+  # tongyi_sso_ticket
+  qwen:
+    - 8178
+    - hd4mr_bqSzpf8Gz1g_BynogsOH1apRX0qcdzyjCP$opehHVEn_305yIKCu_u3RcB_cu3dIZIAw_20
+  kimi:
+    - 8179
+    - eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ1c2VyLWNlbnRlciIsImV4cCI6MTczMjcyMjkxNCwiaWF0IjoxNzI0OTQ2OTE0LCJqdGkiOiJjcjg5am9pbG5sOTBydGowZjRqZyIsInR5cCI6InJlZnJlc2giLCJzdWIiOiJjcjg5am9pbG5sOTBydGowZjRpZyIsInNwYWNlX2lkIjoiY3I4OWpvaWxubDkwcnRqMGY0aTAiLCJhYnN0cmFjdF91c2VyX2lkIjoiY3I4OWpvaWxubDkwcnRqMGY0aGcifQ.FT8m6_10A1IEsp4FMMell-MGYr13hf2OEAzD0Po6OUQy-Gf0tgZRmNg5xZyb5wW1j08Q495BmZMWVkNSDWCoCQ
+  glm:
+    - 8180
+    - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNDc2MDRmMzBiMTU0NDg3YjQwZTgyMWY2NGYyN2Y5ZCIsImV4cCI6MTc0MDUwMzg2MiwibmJmIjoxNzI0OTUxODYyLCJpYXQiOjE3MjQ5NTE4NjIsImp0aSI6IjdlN2EzMjQzM2I5YTRkOGJiYWQyYWM5MjI4YjhmOTMwIiwidWlkIjoiNjZkMGFkMzY1NmY3YThkM2YyYWMzYTQ2IiwidHlwZSI6InJlZnJlc2gifQ.SCSPiAPeN1BtW8PoAC6RaEmpc5Co3AqL3ON5rwlqVTs
