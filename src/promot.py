@@ -8,6 +8,18 @@ from src.functional import find_common_elements
 config = ModelConfig()
 
 
+def answer_process_task2(answer):
+    pathogenesis = re.findall('[A-Z]+', answer)
+    temp = []
+    for pathogenesi in pathogenesis:
+        if len(pathogenesi) == 1:
+            temp.append(pathogenesi)
+        elif len(pathogenesi) > 1:
+            temp.extend(list(pathogenesi))
+    pathogenesis = list(set(temp))
+    return [pathogenesis, answer]
+
+
 def data_process_online_task2(data, model_name):
     prompt = f"""{data['病机选项']} 请解释以上这些中医词汇,每行解释一个词汇"""
     answer = local_openai(system_prompt=None,
@@ -33,9 +45,13 @@ def data_process_online_task2(data, model_name):
 
 @log_to_file
 def data_process_predict_task2(data, model_name, stream):
-    if re.findall('qwen', model_name) or model_name in ['kimi', 'glm']:
+    if isinstance(model_name, list):
+        # TODO: 增加多模型混合 例如['huatuo', 'qwen']指的是同时混合多个模型,取交集作为答案
+        pass
+    elif re.findall(r"(qwen|kimi|glm)", model_name):
         prompt = f"""{data['病机选项']} 请解释以上这些中医词汇,每行解释一个词汇"""
         answer = data_process_online_task2(data, model_name)
+        return answer_process_task2(answer)
     elif re.findall('huatuo', model_name):
         system_prompt = """请根据中医理论，分析临床资料，并从提供的选项中选择最符合的病机，不需要任何额外回答,格式如下：
 病机：
@@ -47,17 +63,9 @@ def data_process_predict_task2(data, model_name, stream):
 """
         answer = local_openai(system_prompt=system_prompt,
                               prompt=prompt, model_name=model_name, stream=stream)
+        return answer_process_task2(answer)
     else:
-        answer = ''
-    pathogenesis = re.findall('[A-Z]+', answer)
-    temp = []
-    for pathogenesi in pathogenesis:
-        if len(pathogenesi) == 1:
-            temp.append(pathogenesi)
-        elif len(pathogenesi) > 1:
-            temp.extend(list(pathogenesi))
-    pathogenesis = list(set(temp))
-    return [pathogenesis, answer]
+        return ['', '']
 
 
 def data_process_save_task2(datas, answers):
