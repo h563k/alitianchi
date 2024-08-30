@@ -48,7 +48,6 @@ def openai_response(system_prompt, prompt, model_type, client: OpenAI, stream=Fa
         for chunk in response:
             delta = chunk.choices[0].delta.content
             full_response += str(delta)
-            print(delta, end="", flush=True)  # 打印每个新字符并刷新缓冲区
         return full_response
     else:
         return response.choices[0].message.content
@@ -76,7 +75,7 @@ def llm_huatuo(system_prompt, prompt, model_name, stream=False) -> str:
 @log_to_file
 def local_openai(system_prompt, prompt, model_name, stream) -> str:
     model_name = model_name if model_name else config.model_name
-    if model_name in ['qwen', 'kimi', 'glm']:
+    if model_name in ['qwen', 'kimi', 'glm', 'spark']:
         return llm_free(system_prompt, prompt, model_name, stream)
     elif re.findall(r'qwen', model_name):
         return llm_qwen(prompt, model_name)

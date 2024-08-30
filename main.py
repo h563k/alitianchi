@@ -1,18 +1,20 @@
 import os
 import sys
 import warnings
-from src.task_process import data_save_and_scores
+from src.task_process import data_save_and_scores_multiple
 
 warnings.filterwarnings('ignore')
 sys.path.append(os.path.abspath(__file__))
 
 if __name__ == '__main__':
-    count = 10
-    # data_save_and_scores('task2', 'qwen2-72b-instruct', count)
-    # data_save_and_scores('task2', 'qwen-max', count)
-    # data_save_and_scores('task2', 'qwen-turbo', count)
-    # data_save_and_scores('task2', 'qwen-72b-chat', count)
-    # data_save_and_scores('task2', 'huatuo-34b-8bit', count, False)
-    # data_save_and_scores('task2', 'qwen', count, False)
-    # data_save_and_scores('task2', 'kimi', count, False)
-    data_save_and_scores('task2', 'glm', count, False)
+    """支持模型
+    付费api
+    qwen2-72b-instruct,qwen-max,qwen-turbo,qwen-72b-chat
+    本地api
+    huatuo-34b-8bit,huatuo-7bit
+    反向代理api
+    qwen,kimi,glm,spark
+    """
+    count = 100
+    model_names = ['kimi', 'glm', 'spark']
+    data_save_and_scores_multiple('task2', model_names, count, False)

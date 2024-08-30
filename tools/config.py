@@ -91,6 +91,10 @@ class ModelConfig:
         return self.config_read()['llm']['glm']
 
     @property
+    def spark(self):
+        return self.config_read()['llm']['spark']
+
+    @property
     def model_full_path(self):
         return f'{self.save_path}/{self.model_path}'
 

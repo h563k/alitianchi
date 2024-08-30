@@ -1,5 +1,5 @@
 import json
-
+from typing import List
 from src.promot import config, data_process_save_task2, data_process_predict_task2
 from tools.standard_log import log_to_file
 
@@ -47,3 +47,8 @@ def data_save_and_scores(type, model_name, counts, stream=False):
     save_file_path = f"{config.save_file_path}/{type}_{model_name}.json"
     with open(save_file_path, 'w') as f:
         json.dump(save_file, f, ensure_ascii=False)
+
+
+def data_save_and_scores_multiple(type: str, model_names: List[str], counts: int, stream=False):
+    for model_name in model_names:
+        data_save_and_scores(type, model_name, counts, stream)
