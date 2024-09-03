@@ -1,7 +1,7 @@
 import os
 import sys
 import warnings
-from src.task_process import data_save_and_scores_multiple
+from src.task_process import data_save_and_scores_multiple, multiple_agent_process
 
 warnings.filterwarnings('ignore')
 sys.path.append(os.path.abspath(__file__))
@@ -15,6 +15,7 @@ if __name__ == '__main__':
     反向代理api
     qwen,kimi,glm,spark
     """
-    count = 100
-    model_names = ['kimi', 'glm', 'spark']
-    data_save_and_scores_multiple('task2', model_names, count, False)
+    # count = 200
+    model_names = ['glm', 'qwen']
+    # data_save_and_scores_multiple('task2', model_names, count, False)
+    print(multiple_agent_process('task2', model_names))

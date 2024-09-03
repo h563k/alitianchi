@@ -29,9 +29,9 @@ def llm_qwen(prompt, model_name) -> str:
         )
 
 
-def openai_response(system_prompt, prompt, model_type, client: OpenAI, stream=False) -> str:
+def openai_response(system_prompt, prompt, model_types, client: OpenAI, stream=False) -> str:
     response = client.chat.completions.create(
-        model=model_type,
+        model=model_types,
         seed=42,
         temperature=config.temperature,
         presence_penalty=config.presence_penalty,
@@ -53,17 +53,17 @@ def openai_response(system_prompt, prompt, model_type, client: OpenAI, stream=Fa
         return response.choices[0].message.content
 
 
-def llm_free(system_prompt, prompt, model_type, stream=False) -> str:
-    port, token = getattr(config, model_type)
+def llm_free(system_prompt, prompt, model_types, stream=False) -> str:
+    port, token = getattr(config, model_types)
     header = {
-        "Content-Type": "application/json",
+        "Content-types": "application/json",
         "Authorization": f"Bearer {token}"
     }
     client = OpenAI(base_url=f"http://192.168.28.5:{port}/v1/",
                     api_key="not used actually",
                     default_headers=header
                     )
-    return openai_response(system_prompt, prompt, model_type, client, stream)
+    return openai_response(system_prompt, prompt, model_types, client, stream)
 
 
 def llm_huatuo(system_prompt, prompt, model_name, stream=False) -> str:

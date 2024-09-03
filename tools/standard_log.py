@@ -26,9 +26,6 @@ def log_to_file(func):
         result = func(*args, **kwargs)
         logger.info(result)
 
-        # 结束记录日志
-        logger.info(f"函数 '{func.__name__}' 结束运行.")
-
         return result
 
     return wrapper

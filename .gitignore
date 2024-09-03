@@ -4,4 +4,4 @@ LLaMA-Factory-0.8.3
 /test
 __pycache__/
 *.pyc
-task*.json
+*.json
