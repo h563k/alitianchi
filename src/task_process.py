@@ -1,7 +1,9 @@
 import os
 import json
+import time
 from typing import List
 from src.promot import config, data_process_save_task2, data_process_predict_task2
+from src.functional import find_common_elements
 from tools.standard_log import log_to_file
 
 
@@ -19,6 +21,7 @@ def data_process(types, model_name, counts, stream):
             pass
         if types == 'task2':
             try:
+                time.sleep(6)
                 result[patient_id] = data_process_predict_task2(
                     data, model_name, stream)
             except RecursionError as e:
@@ -53,8 +56,8 @@ def data_save_and_scores(types, model_name, counts, stream=False):
         json.dump(save_file, f, ensure_ascii=False)
 
 
-def data_save_and_scores_multiple(types: str, model_names: List[str], ranges: int, stream=False):
-    counts = list(range(0, ranges+10, 10))
+def data_save_and_scores_multiple(types: str, model_names: List[str], ranges: List[int], stream=False):
+    counts = list(range(ranges[0], ranges[1]+10, 10))
     counts = [[counts[i-1], j] for i, j in enumerate(counts)][1:]
     for count in counts:
         for model_name in model_names:
@@ -65,21 +68,70 @@ def data_save_and_scores_multiple(types: str, model_names: List[str], ranges: in
 
 
 def multiple_agent_process(types: str, model_names: List[str]):
-    datas = {}
-    for model_name in model_names:
-        file_path = f"{config.save_file_path}/{types}/{model_name}"
-        _, _, files = os.walk(file_path).__next__()
-        temp_data = {}
-        for file in files:
-            with open(os.path.join(file_path, file), 'r') as f:
-                data = json.load(f)
-                for patient in data:
-                    print(type(patient))
-                    key, value = patient.items()
-                    temp_data[key] = value
-        datas[types] = temp_data
-    return datas
+    if types == 'task2':
+        datas = {}
+        for model_name in model_names:
+            file_path = f"{config.save_file_path}/{types}/{model_name}"
+            _, _, files = os.walk(file_path).__next__()
+            temp_data = {}
+            for file in files:
+                with open(os.path.join(file_path, file), 'r') as f:
+                    data = json.load(f)
+                    for item in data[:-1]:
+                        temp_data.update(item)
+            datas[model_name] = temp_data
+        return datas
 
 
-def multiple_agent_score():
-    pass
+def multiple_agent_score(types: str, model_names: List[str]):
+    if types == 'task2':
+        multiple_data = {}
+        datas = multiple_agent_process(types, model_names)
+        for model_name in model_names:
+            data = datas[model_name]
+            count, scores = 0, 0
+            for key, value in data.items():
+                count += 1
+                choices = value['病机预测'].split(';')
+                answer = value['病机答案'].split(';')
+                score = find_common_elements(choices, answer)
+                scores += score
+                if multiple_data.get(key):
+                    multiple_data[key]['病机预测'][model_name] = choices
+                    multiple_data[key]['病机分数'][model_name] = score
+                else:
+                    multiple_data[key] = {
+                        '病机预测': {model_name: choices},
+                        '病机答案': value['病机答案'],
+                        '病机分数': {model_name: score}
+                    }
+            if multiple_data.get('模型总得分'):
+                multiple_data['模型总得分'][model_name] = scores/count
+            else:
+                multiple_data['模型总得分'] = {
+                    model_name: scores/count
+                }
+        count, scores = 0, 0
+        for patient_id, data in multiple_data.items():
+            if not data.get('病机预测'):
+                continue
+            # 生成包含 'A' 到 'I' 的字符集合
+            letters = set(chr(i) for i in range(ord('A'), ord('I')+1))
+            for key in data['病机预测'].keys():
+                temp = data['病机预测'][key]
+                letters = list(set(letters).intersection(set(temp)))
+                if not letters:
+                    letters = data['病机预测']['glm']
+            score = find_common_elements(letters, data['病机答案'].split(';'))
+            count += 1
+            scores += score
+            multiple_data[patient_id]['病机分数']['混合模型'] = score
+        multiple_data['模型总得分']['混合模型'] = scores/count
+        # print(multiple_data['模型总得分'])
+        count = 0
+        for key, value in multiple_data.items():
+            if key == '模型总得分':
+                continue
+            if value['病机分数']['glm'] > value['病机分数']['qwen']:
+                count += 1
+                print(key, value, count)

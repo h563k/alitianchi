@@ -10,6 +10,8 @@ config = ModelConfig()
 
 def answer_process_task2(answer):
     pathogenesis = re.findall('[A-Z]+', answer)
+    pathogenesis = [
+        pathogenesi for pathogenesi in pathogenesis if pathogenesi <= 'I']
     temp = []
     for pathogenesi in pathogenesis:
         if len(pathogenesi) == 1:
@@ -21,20 +23,27 @@ def answer_process_task2(answer):
 
 
 def data_process_online_task2(data, model_name):
-    prompt = f"""{data['病机选项']} 请解释以上这些中医词汇,每行解释一个词汇"""
-    answer = local_openai(system_prompt=None,
-                          prompt=prompt, model_name=model_name, stream=None)
-    temp = []
-    for ans in answer.split('\n'):
-        if re.findall('[A-Z]+', ans):
-            temp.append(ans)
-    answer = '\n'.join(temp)
+    # prompt = f"""{data['病机选项']} 请解释以上这些中医词汇,每行解释一个词汇"""
+    # answer = local_openai(system_prompt=None,
+    #                       prompt=prompt, model_name=model_name, stream=None)
+    # temp = []
+    # for ans in answer.split('\n'):
+    #     if re.findall('[A-Z]+', ans):
+    #         temp.append(ans)
+    # answer = '\n'.join(temp)
+    #     prompt = f"""### 临床资料
+    # {data['临床资料']}
+    # ### 病机选项
+    # {data['病机选项']}
+    # ### 病机解释
+    # {answer}
+    # 请根据临床资料最符合的病机选项(单选或多选),给出答案即可,不需要任何额外回答,格式如下：
+    # 病机：
+    # """
     prompt = f"""### 临床资料
 {data['临床资料']}
 ### 病机选项
 {data['病机选项']}
-### 病机解释
-{answer}
 请根据临床资料最符合的病机选项(单选或多选),给出答案即可,不需要任何额外回答,格式如下：
 病机：
 """
