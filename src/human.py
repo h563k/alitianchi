@@ -27,7 +27,7 @@ def human_score():
         datas_process(data, human_scores)
     scores, count = 0, 0
     result = pd.DataFrame(
-        columns=['临床信息抽取', '病机答案', '证候答案', '临证体会', '辨证'])
+        columns=['抽取', '病机', '证候', '临证', '辨证'])
     for key, value in human_scores.items():
         ans = answer[key]
         ans['task1'] = ans['task1'].replace('，', ',')
@@ -42,8 +42,8 @@ def human_score():
             ans['task3'].split(";"), value['task3'].split(";"))
         score = task1_score*0.1+task2_score*0.35 + \
             task3_score * 0.35+task4_score*0.1+task5_score*0.1
-        result.loc[key] = [task1_score, task2_score, task3_score,
-                           task4_score, task5_score]
+        result.loc[f"抽取测试{count+1}"] = [task1_score, task2_score, task3_score,
+                                        task4_score, task5_score]
         scores += score
         count += 1
     # 将 DataFrame 格式化为百分数形式
