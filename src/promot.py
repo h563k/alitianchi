@@ -8,10 +8,11 @@ from src.functional import find_common_elements
 config = ModelConfig()
 
 
-def answer_process_task2(answer):
-    pathogenesis = re.findall('[A-Z]+', answer)
-    pathogenesis = [
-        pathogenesi for pathogenesi in pathogenesis if pathogenesi <= 'I']
+def answer_process_task2(answer, model_name):
+    # kimi可能会返回参考结果，需要过滤
+    if re.findall('kimi', model_name) and re.findall('搜索结果来自', answer):
+        answer = answer.split('搜索结果来自')[0]
+    pathogenesis = re.findall('[A-J]+', answer)
     temp = []
     for pathogenesi in pathogenesis:
         if len(pathogenesi) == 1:
@@ -56,7 +57,7 @@ def data_process_online_task2(data, model_name):
 def data_process_predict_task2(data, model_name, stream):
     if re.findall(r"(qwen|kimi|glm|spark)", model_name):
         answer = data_process_online_task2(data, model_name)
-        return answer_process_task2(answer)
+        return answer_process_task2(answer, model_name)
     elif re.findall('huatuo', model_name):
         system_prompt = """请根据中医理论，分析临床资料，并从提供的选项中选择最符合的病机，不需要任何额外回答,格式如下：
 病机：
@@ -68,7 +69,7 @@ def data_process_predict_task2(data, model_name, stream):
 """
         answer = local_openai(system_prompt=system_prompt,
                               prompt=prompt, model_name=model_name, stream=stream)
-        return answer_process_task2(answer)
+        return answer_process_task2(answer, model_name)
     else:
         return ['', '']
 

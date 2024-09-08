@@ -14,7 +14,7 @@ def custom_tokenizer(text):
     return tokens
 
 
-def rouge_l(reference_summary: str, predicted_summary: str):
+def rouge_l(reference_summary: str, predicted_summary: str) -> dict:
     # 初始化ROUGE对象
     rouge = Rouge()
     reference_summary = custom_tokenizer(reference_summary)

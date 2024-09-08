@@ -2,6 +2,7 @@ import os
 import sys
 import warnings
 from src.task_process import data_save_and_scores_multiple, multiple_agent_score
+from src.human import human_score
 
 warnings.filterwarnings('ignore')
 sys.path.append(os.path.abspath(__file__))
@@ -15,7 +16,9 @@ if __name__ == '__main__':
     反向代理api
     qwen,kimi,glm,spark
     """
-    ranges = [50, 80]
-    model_names = ['glm']
-    data_save_and_scores_multiple('task2', model_names, ranges, False)
+    ranges = [30, 210]
+    model_names = ['glm', 'qwen', 'kimi', 'spark']
+    model_names = ['glm', 'qwen']
+    # data_save_and_scores_multiple('task2', model_names, ranges, False)
     # datas = multiple_agent_score('task2', model_names)
+    human_score()

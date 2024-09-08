@@ -121,7 +121,7 @@ def multiple_agent_score(types: str, model_names: List[str]):
                 temp = data['病机预测'][key]
                 letters = list(set(letters).intersection(set(temp)))
                 if not letters:
-                    letters = data['病机预测']['glm']
+                    letters = data['病机预测'][key]
             score = find_common_elements(letters, data['病机答案'].split(';'))
             count += 1
             scores += score
@@ -131,7 +131,5 @@ def multiple_agent_score(types: str, model_names: List[str]):
         count = 0
         for key, value in multiple_data.items():
             if key == '模型总得分':
-                continue
-            if value['病机分数']['glm'] > value['病机分数']['qwen']:
-                count += 1
+                # continue
                 print(key, value, count)
