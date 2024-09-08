@@ -27,7 +27,7 @@ def human_score():
         datas_process(data, human_scores)
     scores, count = 0, 0
     result = pd.DataFrame(
-        columns=['抽取', '病机', '证候', '临证', '辨证'])
+        columns=['抽取', '病机', '证候', '临证', '辨证', '得分'])
     for key, value in human_scores.items():
         ans = answer[key]
         ans['task1'] = ans['task1'].replace('，', ',')
@@ -43,9 +43,11 @@ def human_score():
         score = task1_score*0.1+task2_score*0.35 + \
             task3_score * 0.35+task4_score*0.1+task5_score*0.1
         result.loc[f"抽取测试{count+1}"] = [task1_score, task2_score, task3_score,
-                                        task4_score, task5_score]
+                                        task4_score, task5_score, score]
         scores += score
         count += 1
     # 将 DataFrame 格式化为百分数形式
     result = result.applymap(lambda x: f'{x*100:.2f}%')
     print(result)
+    print(f"测试集平均准确率为：{scores/count:.2%}")
+    result.to_excel("data/human_score.xlsx")
